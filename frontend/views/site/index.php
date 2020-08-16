@@ -2,7 +2,9 @@
 
 use yii\helpers\Html;
 
-$tips = \backend\models\SettingsText::find()->all();
+/**
+ * @var \backend\models\SettingsText $settingsText
+ */
 ?>
 
 <section class="nav-block-list">
@@ -109,7 +111,7 @@ $tips = \backend\models\SettingsText::find()->all();
     <span class="about-title">About us</span>
     <div class="about-section">
                 <span class="about-txt">
-                    BoxStar Moving Services, LLC is dedicated to providing top-quality moving services, storage and moving supplies. We offer moving solutions at competitive prices for local and long distance needs for both residential and commercial clientele. We take pride in our professionally trained crew and would love to be at your service.BoxStar Moving Services, LLC is dedicated to providing top-quality moving services, storage and moving supplies. We offer moving solutions at competitive prices for local and long distance needs for both residential and commercial clientele. We take pride in our professionally trained crew and would love to be at your service.
+                    <?= $settingsText->about_us ?>
                 </span>
         <img src="<?= Yii::getAlias('@web') . '/assets/images/man.png' ?>" alt="" class="about-img">
     </div>
@@ -126,50 +128,43 @@ $tips = \backend\models\SettingsText::find()->all();
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
-                <p class="block-title">Fully Licensed and Insured</p>
-                <p class="block-detail">We're licensed and insured so we can solve any challenge and give you peace of
-                    mind.</p>
+                <p class="block-title"><?= $settingsText->one_tick_header ?></p>
+                <p class="block-detail"><?= $settingsText->one_tick_content ?></p>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
-                <p class="block-title">Full-Service Movers & Packers</p>
-                <p class="block-detail">We know all the ins and outs that'll streamline your move. Our teams are
-                    background checked and trained into the best Northern Virginia movers and packers.</p>
+                <p class="block-title"><?= $settingsText->two_tick_header ?></p>
+                <p class="block-detail"><?= $settingsText->two_tick_content ?></p>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
-                <p class="block-title">Accurate & Upfront Estimates</p>
-                <p class="block-detail">Our moving coordinators will make sure moving day is a pleasant experience
-                    without any surprises or headaches.</p>
+                <p class="block-title"><?= $settingsText->three_tick_header ?></p>
+                <p class="block-detail"><?= $settingsText->three_tick_content ?></p>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
-                <p class="block-title">World-Class Customer Service</p>
-                <p class="block-detail">Our helpful representatives will put the cherry on top of your move. Our
-                    award-winning team has serious passion for service and integrity.</p>
+                <p class="block-title"><?= $settingsText->four_tick_header ?></p>
+                <p class="block-detail"><?= $settingsText->four_tick_content ?></p>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
-                <p class="block-title">Fully Equipped Moving Trucks</p>
-                <p class="block-detail">BoxStar movers is a full-service moving company in Arlington Virginia. Our
-                    trucks have every tool and material you'll ever need so you're never sidelined dealing with costly
-                    delays on moving day.</p>
+                <p class="block-title"><?= $settingsText->five_tick_header ?></p>
+                <p class="block-detail"><?= $settingsText->five_tick_content ?></p>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
-                <p class="block-title">Stars On Google, HomeAdvisor & Yelp!</p>
-                <p class="block-detail">We're sure to pay careful attention to your needs. Our company's founding values
-                    are based on honesty, integrity and service.</p>
+                <p class="block-title"><?= $settingsText->six_tick_header ?></p>
+                <p class="block-detail"><?= $settingsText->six_tick_content ?></p>
             </aside>
         </div>
     </div>

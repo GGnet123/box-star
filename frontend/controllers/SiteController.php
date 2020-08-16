@@ -32,6 +32,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $settings_text = \backend\models\SettingsText::find()->one();
+        return $this->render('index', ['settingsText' => $settings_text]);
     }
 }
