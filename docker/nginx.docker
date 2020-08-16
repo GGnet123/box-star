@@ -1,0 +1,7 @@
+FROM nginx:1.10
+
+ADD ./docker/nginx/backend.conf /etc/nginx/conf.d/backend.conf
+ADD ./docker/nginx/front.conf /etc/nginx/conf.d/front.conf
+ADD ./docker/nginx/content.conf /etc/nginx/conf.d/content.conf
+
+WORKDIR /var/www
