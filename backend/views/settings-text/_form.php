@@ -14,10 +14,15 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'call_us_number')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'contact_email')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'business_hours')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'about_us')->widget(CKEditor::className(), [
         'kcfinder' => true,
     ]); ?>
+
+    <?= $form->field($model, 'free_estimate_text')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'one_tick_header')->textInput(['maxlength' => true]) ?>
 

@@ -27,6 +27,7 @@
                     ['label' => 'Move types', 'icon' => 'truck', 'url' => ['/move-types']],
                     ['label' => 'Move sizes', 'icon' => 'magic', 'url' => ['/move-sizes']],
                     ['label' => 'Orders', 'icon' => 'list-alt', 'url' => ['/orders']],
+                    ['label' => 'Comments', 'icon' => 'list', 'url' => ['/comments']],
                     ['label' => 'Settings', 'icon' => 'gear', 'items' => [
                         ['label' => 'Main Texts', 'icon' => 'list', 'url' => ['/settings-text']],
                         ['label' => 'Main Images', 'icon' => 'list', 'url' => ['/settings-images']],

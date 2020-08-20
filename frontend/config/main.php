@@ -40,6 +40,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/tips' => 'site/tips'
             ],
         ],
 

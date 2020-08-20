@@ -4,6 +4,13 @@ use yii\helpers\Html;
 
 /**
  * @var \backend\models\SettingsText $settingsText
+ * @var \backend\models\SettingsServices $settingsServices
+ * @var \backend\models\Orders $modelOrders
+ * @var \backend\models\Comments $modelComments
+ * @var \backend\models\States $states
+ * @var \backend\models\Comments $comments
+ * @var \backend\models\SettingsPartners $partners
+ * @var \backend\models\SettingsImages $images
  */
 ?>
 
@@ -12,15 +19,15 @@ use yii\helpers\Html;
     <div class="allBlock">
         <div class="nav-block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/phone.svg' ?>" alt="phone" class="nav-block-icon">
-            <a href="tel:+2028439181" class="nav-block-txt">Contact us</a>
+            <a href="tel:<?= $settingsText->call_us_number ?>" class="nav-block-txt">Contact us</a>
         </div>
         <div class="nav-block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/debt.svg' ?>" alt="estimate" class="nav-block-icon">
-            <a href="" class="nav-block-txt">Free estimate!</a>
+            <a href="#" class="nav-block-txt" id="myBtn">Free estimate!</a>
         </div>
         <div class="nav-block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/project.svg' ?>" alt="tips" class="nav-block-icon">
-            <a href="" class="nav-block-txt">Moving Tips</a>
+            <a href="/tips" class="nav-block-txt">Moving Tips</a>
         </div>
     </div>
 </section>
@@ -33,28 +40,46 @@ use yii\helpers\Html;
                     <a href="" class="header-txt">HOME</a>
                 </div>
                 <div class="header-block">
-                    <a href="" class="header-txt">SERVICES</a>
+                    <a href="#services" class="header-txt">SERVICES</a>
                 </div>
-                <div class="header-block">
-                    <a href="" class="header-txt">LOCATIONS</a>
+                <div class="dropdown">
+                    <div class="header-block">
+                        <p class="header-txt">LOCATIONS</p>
+                    </div>
+                    <div class="dropdown-content">
+                        <?php foreach ($states as $key => $state): ?>
+                        <?php if ($key == 0 || ($key) % 3 == 0){
+                            echo '<div class="row">';
+                            } ?>
+                            <div class="column">
+                                <h3 class="column-ttl"><?= $state->title ?></h3>
+                                <?php foreach ($state->cities as $city): ?>
+                                <a href="#"><?= $city->title ?></a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php if (($key + 1) % 3 == 0 ){
+                            echo '</div>';
+                        } ?>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
+<!--                //////-->
             </section>
         </div>
     </section>
     <section class="about">
         <div class="form-style-6">
-            <h1 class="form-title">BoxStar Moving Services, VA </h1>
+            <h1 class="form-title" id="formTitle">BoxStar Moving Services, VA </h1>
             <h4 class="form-txt">Licensed, Insured & Bonded DMV Movers</h4>
             <?php
-            $model = new \backend\models\Orders();
             $form = \yii\widgets\ActiveForm::begin();
             ?>
-            <?= $form->field($model, 'client_name')->textInput([
+            <?= $form->field($modelOrders, 'client_name')->textInput([
                 'placeholder' => 'ENTER YOUR NAME',
                 'autocomplete' => 'new-password'
             ])->label('') ?>
 
-            <?= $form->field($model, 'client_phone')->widget(\yii\widgets\MaskedInput::class, [
+            <?= $form->field($modelOrders, 'client_phone')->widget(\yii\widgets\MaskedInput::class, [
                 'mask' => '+1 (999) 999-9999',
                 'options' => [
                     'placeholder' => 'ENTER YOUR PHONE NUMBER',
@@ -63,14 +88,14 @@ use yii\helpers\Html;
             ])->label('') ?>
 
             <?php $cities = \backend\models\Cities::find()->all() ?>
-            <?= $form->field($model, 'origin_city_id')->widget(\kartik\select2\Select2::class, [
+            <?= $form->field($modelOrders, 'origin_city_id')->widget(\kartik\select2\Select2::class, [
                 'data' => \yii\helpers\ArrayHelper::map($cities, 'id', 'zip_code'),
                 'options' => [
                      'placeholder' => 'ORIGIN ZIP CODE'
                 ]
             ])->label('') ?>
 
-            <?= $form->field($model, 'destination_city_id')->widget(\kartik\select2\Select2::class, [
+            <?= $form->field($modelOrders, 'destination_city_id')->widget(\kartik\select2\Select2::class, [
                 'data' => \yii\helpers\ArrayHelper::map($cities, 'id', 'zip_code'),
                 'options' => [
                     'placeholder' => 'DESTINATION ZIP CODE'
@@ -78,34 +103,58 @@ use yii\helpers\Html;
             ])->label('') ?>
 
             <?php $moveTypes = \backend\models\MoveTypes::find()->all(); ?>
-            <?= $form->field($model, 'move_type_id')
+            <?= $form->field($modelOrders, 'move_type_id')
                 ->dropDownList(\yii\helpers\ArrayHelper::map($moveTypes, 'id', 'title'), ['prompt' => 'MOVE TYPE'])
                 ->label('') ?>
 
-            <?= $form->field($model, 'move_date')->widget(\kartik\date\DatePicker::class, [
+            <?= $form->field($modelOrders, 'move_date')->widget(\kartik\date\DatePicker::class, [
                 'pluginOptions' => [
                     'format' => 'yyyy-mm-dd',
                     'todayHighlight' => true,
                 ],
                 'options' => [
-                    'autocomplete' => 'new-password'
+                    'autocomplete' => 'new-password',
+                    'style' => 'z-index:1'
                 ]
             ]) ?>
 
             <?php $moveSizes = \backend\models\MoveSizes::find()->all(); ?>
-            <?= $form->field($model, 'move_size_id')
+            <?= $form->field($modelOrders, 'move_size_id')
                 ->dropDownList(\yii\helpers\ArrayHelper::map($moveSizes, 'id', 'title'), ['prompt' => 'WE\'RE MOVING YOUR..'])
                 ->label('') ?>
 
-            <?= $form->field($model, 'rooms_number_id')->dropDownList(\backend\models\Orders::$rooms)->label('') ?>
+            <?= $form->field($modelOrders, 'rooms_number_id')->dropDownList(\backend\models\Orders::$rooms)->label('') ?>
 
             <input type="submit" value="BUILD MY ESTIMATE"/>
 
             <?php $form = \yii\widgets\ActiveForm::end() ?>
+            <?php if (Yii::$app->session->hasFlash('alert')): ?>
+                <div class="alert alert-success alert-dismissable" role="alert" id="alert" style="text-align: center">
+                    <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
+                    <h4><i class="glyphicon glyphicon-ok"></i>Saved!</h4>
+                    <?= Yii::$app->session->getFlash('alert') ?>
+                </div>
+            <?php endif; ?>
         </div>
+
     </section>
     <section class="non-rect"></section>
 </header>
+
+<div class="mobile-nav">
+    <div class="nav-block">
+        <img src="<?= Yii::getAlias('@web') . '/assets/images/phone.svg' ?>" alt="phone" class="nav-block-icon">
+        <a href="tel:<?= $settingsText->call_us_number ?>" class="nav-block-txt">Contact us</a>
+    </div>
+    <div class="nav-block">
+        <img src="<?= Yii::getAlias('@web') . '/assets/images/debt.svg' ?>" alt="estimate" class="nav-block-icon">
+        <a class="nav-block-txt" id="myBtn1">Free estimate!</a>
+    </div>
+    <div class="nav-block">
+        <img src="<?= Yii::getAlias('@web') . '/assets/images/project.svg' ?>" alt="tips" class="nav-block-icon">
+        <a href="/tips" class="nav-block-txt">Moving Tips</a>
+    </div>
+</div>
 
 <article class="aboutUs">
     <span class="about-title">About us</span>
@@ -113,12 +162,14 @@ use yii\helpers\Html;
                 <span class="about-txt">
                     <?= $settingsText->about_us ?>
                 </span>
-        <img src="<?= Yii::getAlias('@web') . '/assets/images/man.png' ?>" alt="" class="about-img">
+        <img src="<?= Yii::getAlias('@web') . $images->about_us_image ?>" alt="" class="about-img">
     </div>
 </article>
 
 <section class="partners">
-
+    <?php foreach ($partners as $partner): ?>
+    <?= Html::img(Yii::getAlias('@web') . '/assets/images/logos' . $partner->logo, ['class' => 'partner-img']) ?>
+    <?php endforeach; ?>
 </section>
 
 <section class="ticks">
@@ -129,42 +180,42 @@ use yii\helpers\Html;
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
                 <p class="block-title"><?= $settingsText->one_tick_header ?></p>
-                <p class="block-detail"><?= $settingsText->one_tick_content ?></p>
+                <span class="block-detail"><?= $settingsText->one_tick_content ?></span>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
                 <p class="block-title"><?= $settingsText->two_tick_header ?></p>
-                <p class="block-detail"><?= $settingsText->two_tick_content ?></p>
+                <span class="block-detail"><?= $settingsText->two_tick_content ?></span>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
                 <p class="block-title"><?= $settingsText->three_tick_header ?></p>
-                <p class="block-detail"><?= $settingsText->three_tick_content ?></p>
+                <span class="block-detail"><?= $settingsText->three_tick_content ?></span>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
                 <p class="block-title"><?= $settingsText->four_tick_header ?></p>
-                <p class="block-detail"><?= $settingsText->four_tick_content ?></p>
+                <span class="block-detail"><?= $settingsText->four_tick_content ?></span>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
                 <p class="block-title"><?= $settingsText->five_tick_header ?></p>
-                <p class="block-detail"><?= $settingsText->five_tick_content ?></p>
+                <span class="block-detail"><?= $settingsText->five_tick_content ?></span>
             </aside>
         </div>
         <div class="block">
             <img src="<?= Yii::getAlias('@web') . '/assets/images/tick.svg' ?>" alt="" class="block-img">
             <aside class="block-txt">
                 <p class="block-title"><?= $settingsText->six_tick_header ?></p>
-                <p class="block-detail"><?= $settingsText->six_tick_content ?></p>
+                <span class="block-detail"><?= $settingsText->six_tick_content ?></span>
             </aside>
         </div>
     </div>
@@ -175,97 +226,129 @@ use yii\helpers\Html;
     <article class="ourServices">
         <span class="ourServices-title">Our services</span>
         <section class="images">
-            <img src="<?= Yii::getAlias('@web') . '/assets/images/img1.jpg' ?>" alt="" class="imgService">
-            <img src="<?= Yii::getAlias('@web') . '/assets/images/img2.jpg' ?>" alt="" class="imgService">
-            <img src="<?= Yii::getAlias('@web') . '/assets/images/img3.jpg' ?>" alt="" class="imgService1">
+            <img src="<?= strpos($images->our_service_1, 'http') !==false ? $images->our_service_1 : Yii::getAlias('@web') . $images->our_service_1 ?>" alt="" class="imgService">
+            <img src="<?= strpos($images->our_service_2, 'http') !==false ? $images->our_service_2 : Yii::getAlias('@web') . $images->our_service_2 ?>" alt="" class="imgService">
+            <img src="<?= strpos($images->our_service_3, 'http') !==false ? $images->our_service_3 : Yii::getAlias('@web') . $images->our_service_3 ?>" alt="" class="imgService1">
         </section>
         <div class="ourServices-section">
-            <section class="ourServices-section-titles">
-                <h1 class="ourServices-section-titles-ttl" id="first">RESIDENTIAL MOVING</h1>
-                <h1 class="ourServices-section-titles-ttl" id="second">COMMERCIAL MOVING</h1>
-                <h1 class="ourServices-section-titles-ttl" id="third">LONG DISTANCE</h1>
-                <h1 class="ourServices-section-titles-ttl" id="four">PACKING SERVICE ONLY</h1>
-                <h1 class="ourServices-section-titles-ttl" id="five">SPECIALTY MOVING</h1>
-                <h1 class="ourServices-section-titles-ttl" id="six">LABOR ONLY</h1>
-            </section>
-
-            <div id="selectedService1" class="service-text">
-                Moving from one home to another marks a milestone in your life. It can be hectic, emotional, and
-                overwhelming.
-                On a local move your belongings are being wrapped and padded, loaded onto the truck, safely transported to
-                your new place and carefully unloaded.
-                Our licensed, insured movers will help you every step of the way. Our comprehensive service includes:
-                <ul class="service-list-text">
-                    <li class="service-list-item">Free furniture pads and floor runner.</li>
-                    <li class="service-list-item">Shrink wrap and moving tape, as well as a full range of packing materials for your loose items.
-                        (additional fee).
-                    </li>
-                    <li class="service-list-item">Wrapping of furniture to ensure its safe transportation.</li>
-                    <li class="service-list-item">Packing of your entire household, delivery, and unpacking (needs to be requested beforehand).</li>
-                    <li class="service-list-item">Loading and unloading in a certain order according to your preferences.</li>
-                    <li class="service-list-item"> Secure, climate-controlled storage for items no longer needed.</li>
-                    <li class="service-list-item"> Overnight storage.</li>
-                </ul>
+            <div class="ourServices-section-titles-list">
+                <section class="ourServices-section-titles" id="services">
+                    <?php
+                    foreach ($settingsServices as $service) {
+                        echo '<h1 class="ourServices-section-titles-ttl">' . $service->title . '</h1>';
+                    }
+                    ?>
+                </section>
             </div>
-
-            <div id="selectedService2" class="service-text">
-                Countless businesses trust BoxStar Moving Services, LLC to provide commercial moving that is safe, effective, and time sensitive. As a local commercial moving company, BoxStar Movers  offers unmatched service at prices your business can afford.
-                Let us help you:
-                <ul class="service-list-text">
-                    <li class="service-list-item"> Pack up your workspaces;</li>
-                    <li class="service-list-item">Carefully transport computers and networking equipment;</li>
-                    <li class="service-list-item">Relocate and set up your business in a brand-new location.</li>
-                </ul>
-            </div>
-
-            <div id="selectedService3" class="service-text">
-                When you are moving your home or business to a new location, there are many things to consider. From packing valuables the right way to loading and unloading the truck, you likely will require extra help to ensure that everything is handled correctly. We work quickly and efficiently to deliver the top care and attention to each of our clients.
-                Receive the service that you deserve when you work with our residential and commercial long-distance moving company. Our experienced team members understand the right way to pack and transport items, so that you can focus on everything else you need to do for your move. Our long-distance flat rate price includes all the needed services for your move, no hidden or additional fees at the completion of the move
-            </div>
-
-            <div id="selectedService4" class="service-text">
-                You may not need a truck for your upcoming move but would surely appreciate a big hand to pack your items, then look no further! Our packing teams are trained to use only the safest, sturdiest space-saving and cost-effective packing materials available to protect your goods. Try us and you’ll see the difference! Our customers have several options when it comes to packing:
-
-                <ul class="service-list-text">
-                    <li class="service-list-item"> Packing by Owner
-                        Customer is responsible for the pack up of personal belongings, BoxStar Movers will move all boxes packed and blanket-wrap furniture prior to loading. Packing supplies can be purchased from BoxStar Movers and delivered to your home beforehand or on the day of the move.
-                    </li>
-                    <li class="service-list-item">Partial Pack
-                        Customers can pick the items or rooms/areas that need to be packed by BoxStar Movers. For instance, you only need help with the kitchen or clothes, or books. Packing supplies can be purchased from BoxStar Movers and delivered to your home beforehand or on the day of the move.
-                    </li>
-                    <li class="service-list-item">Full Packing Service
-                        BoxStar Movers provides all the packing materials and moving boxes. Our experienced crew places all your loose items into boxes and wraps the furniture. There is absolutely nothing you need to do or worry about!
-                    </li>
-                </ul>
-            </div>
-
-            <div id="selectedService5" class="service-text">
-                We're here for you if you need help moving a large, bulky or otherwise awkward item from point A to B. We can move baby grand pianos, gun safes, exercise equipment and other large and cumbersome items.
-            </div>
-
-            <div id="selectedService6" class="service-text">
-                From loading/unloading a rented truck to moving furniture around the house, trust BoxStar Moving Services, LLC to handle this service for you!
-            </div>
-
+                <?php
+                foreach ($settingsServices as $service) {
+                    $tmp = str_replace('<li', '<li class="service-list-item"', $service->content);
+                    $val = str_replace('<ul', '<ul class="service-list-text"', $tmp);
+                    $val2 = str_replace('<p>', '', $val);
+                    echo '<div class="service-text">' . str_replace('</p>', '', $val2)  . '</div>';
+                }
+                ?>
         </div>
     </article>
-
 </div>
+<section class="user-comments">
+    <h1 class="user-comments-title">What our customers say about us</h1>
+    <section class="comment-list">
+        <?php foreach ($comments as $comment): ?>
+        <div class="comment">
+            <span class="cmnt"><?= $comment->comment ?></span>
+            <span class="user-name"><?= $comment->name ?></span>
+        </div>
+        <?php endforeach; ?>
+    </section>
+    <div class="dots">
+        <div class="dot">1</div>
+        <div class="dot">2</div>
+        <div class="dot">3</div>
+    </div>
+
+</section>
+<section class="comments">
+    <div class="comments-block">
+        <img src="<?= strpos($images->comment_section_image, 'http') !==false ? $images->comment_section_image : Yii::getAlias('@web') . $images->comment_section_image ?>" alt="" class="comments-block-img">
+        <div class="form-style-6">
+            <h1 class="form-title">Leave a comment</h1>
+            <?php
+            $form = \yii\widgets\ActiveForm::begin();
+            echo $form->field($modelComments, 'name')->textInput();
+            echo $form->field($modelComments, 'comment')->textarea();
+            echo '<input type="submit" value="Submit"/>';
+            \yii\widgets\ActiveForm::end();
+            ?>
+        </div>
+    </div>
+</section>
 
 <section class="call">
-    <span class="call-txt">Ready To Move? Let Us Help You</span>
-    <button class="call-btn">GET A QUOTE?</button>
+    <a href="tel:<?= $settingsText->call_us_number ?>" class="call-tel"><span class="call-txt">Are you moving today?       Call Us <?= $settingsText->call_us_number ?></span></a>
 </section>
 
-<section class="comments">
-    <span class="ourServices-title">Our services</span>
+<section class="bottom-block1">
+    <div class="left-block">
+        <span class="left-block-title">Size of move</span>
+        <span class="left-block-txt">Please don't underestimate the size of your move! Make your choice wisely! It helps us meet our schedule and guards against unexpected surprises.</span>
+
+        <span class="left-block-title">Do Not See Your Move Size? No Worries!</span>
+        <span class="left-block-txt">Once you submit a complete move request, you can also provide a precise inventory of all items that you plan to move.</span>
+
+        <span class="left-block-title">Type of entrance</span>
+        <span class="left-block-txt">If your ground floor apartment is located on a hill and involves outside stairs, please choose the type of entrance according to how many steps you have, NOT ground floor. 10-12 steps usually equal to one flight of stairs.</span>
+    </div>
+    <div class="center-block">
+        <img src="<?= Yii::getAlias('@web') . '/assets/images/Logo1.png' ?>" alt="" class="center-block-img">
+        <button class="center-block-btn"><a href="#formTitle">GET A QUOTE</a></button>
+    </div>
+    <div class="right-block">
+        <span class="left-block-title">CONTACT US</span>
+        <div class="phone-block">
+            <img src="<?= Yii::getAlias('@web') . '/assets/images/phone-bottom.svg' ?>" alt=""  class="bottom-icon">
+            <p class="bottom-txt"><?= $settingsText->call_us_number ?></p>
+        </div>
+        <div class="phone-block">
+            <img src="<?= Yii::getAlias('@web') . '/assets/images/mail.svg' ?>" alt="" class="bottom-icon">
+            <p class="bottom-txt"><?= $settingsText->contact_email ?></p>
+        </div>
+        <div class="phone-block">
+            <img src="<?= Yii::getAlias('@web') . '/assets/images/pin.svg' ?>" alt="" class="bottom-icon">
+            <p class="bottom-txt"><?= $settingsText->location ?></p>
+        </div>
+
+        <span class="left-block-title">BUSINESS HOURS:</span>
+        <div class="phone-block">
+            <img src="<?= Yii::getAlias('@web') . '/assets/images/clock.svg' ?>" alt="" class="bottom-icon">
+            <p class="bottom-txt"><?= $settingsText->business_hours ?></p>
+        </div>
+    </div>
 </section>
+<footer>
+    <p class="footer-class">©2020 BoxStar Moving Services, LLC</p>
+</footer>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p class="modal-content-txt"><?= $settingsText->free_estimate_text ?> <br>
+            <span class="modal-content-txt-active">Call us today! <br> <a class="modal-content-txt-active" href="tel:<?= $settingsText->call_us_number ?>"><?= $settingsText->call_us_number ?>.</a></span>
+        </p>
+    </div>
+</div>
+
 <?php
 $with_rooms = \backend\models\MoveSizes::find()->select('id')->where(['with_rooms' => 1])->all();
 $array = json_encode(array_column($with_rooms, 'id'));
 
 $js = <<<JS
 $('document').ready(function () {
+    
+    $(".close").click(function() {
+      $("#alert").hide();
+    })
+    
     let rooms = $('#orders-rooms_number_id');
     let move_size = $('#orders-move_size_id');
     rooms.hide();
@@ -327,6 +410,26 @@ $('document').ready(function () {
                 serviceText[i].style.display = "none";
                 serviceTitleText[i].style.backgroundColor = "#f8f8f8";
             }
+        }
+    }
+    var modal = document.getElementById("myModal");
+    var btn = document.getElementById("myBtn");
+    var btn1 = document.getElementById("myBtn1");
+
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "block";
+    };
+    btn1.onclick = function() {
+        modal.style.display = "block";
+    };
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    };
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
         }
     }
 });

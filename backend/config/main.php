@@ -19,8 +19,8 @@ return [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'kobecan228@gmail.com',
-                'password' => 'kevinlove0',
+                'username' => 'sales@boxstarmovers.com',
+                'password' => 'Bs132620220',
                 'port' => '465',
                 'encryption' => 'ssl',
             ]

@@ -4,18 +4,18 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\SettingsPartnersSearch */
+/* @var $searchModel backend\models\CommentsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Settings Partners';
+$this->title = 'Comments';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="settings-partners-index">
+<div class="comments-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Settings Partners', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Comments', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'name',
+            'comment:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

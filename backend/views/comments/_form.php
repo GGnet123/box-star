@@ -1,23 +1,20 @@
 <?php
 
-use dosamigos\ckeditor\CKEditor;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\SettingsServices */
+/* @var $model backend\models\Comments */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="settings-services-form">
+<div class="comments-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'content')->widget(CKEditor::className(), [
-        'kcfinder' => true,
-    ]); ?>
+    <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

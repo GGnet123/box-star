@@ -24,7 +24,23 @@ class SettingsPartners extends ActiveRecord
     public function rules()
     {
         return [
-            [['name','logo'], 'required']
+            [['name'], 'required'],
+            [['logo'], 'safe']
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if ($this->isNewRecord) {
+            $this->logo = \Yii::$app->session->get(\Yii::$app->session->id);
+        } else {
+            $partner = SettingsPartners::findOne($this->id);
+            $path = \Yii::getAlias('@frontend') . '/web/assets/images/logos' . $partner->logo;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+            $this->logo = \Yii::$app->session->get(\Yii::$app->session->id);
+        }
+        return parent::beforeSave($insert);
     }
 }
